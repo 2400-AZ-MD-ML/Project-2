@@ -1,3 +1,5 @@
+package Project2;
+
 import java.util.Arrays;
 import java.util.EmptyStackException;
 /**
@@ -20,7 +22,6 @@ public final class ArrayStack<T> implements StackInterface<T>
   
    public ArrayStack(int initialCapacity)
    {
-      integrityOK = false;
       checkCapacity(initialCapacity);
       
       // The cast is safe because the new array contains null entries
