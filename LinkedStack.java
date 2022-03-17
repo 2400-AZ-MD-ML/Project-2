@@ -170,8 +170,4 @@ public int precedence(T operator){
          next = nextNode;
       } // end setNextNode
 	} // end Node
-   public static void main(String[] args){
-      LinkedStack<String> result =  new LinkedStack<String>();
-      System.out.println(result.converttoPostFix(" a *b/( c - a)+d*e "));
-   }
 } // end LinkedStack

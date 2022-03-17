@@ -66,6 +66,67 @@ while(topIndex>-1){
    topIndex--;
 }
 }
+/**
+ * Evaulates a string postfix expression with variables already substituted
+ * @param postfix the postfix string to be solved
+ * @return the solution of the postfix expression
+ */
+ //written by Melody
+ public double evaluatePostfix(String postfix){
+   checkIntegrity();
+   //checks if postfix is blank
+   if(postfix.isBlank()){
+      throw new IllegalStateException("Empty string");
+   }
+   //Trim the input for the empty spaces in the beginning and end if there is any
+   postfix = postfix.trim();
+   double result = 0; //holds the total int amount after operations
+   //begin looping through the sanitized postfix
+   for(int i = 0; i < postfix.length(); i++){
+      //Make the current character a T type, so that we can push it onto the stack if it's a operator
+      @SuppressWarnings("unchecked")
+      T currently = (T)String.valueOf(postfix.charAt(i));
+      char current = postfix.charAt(i);
+      //move forward in the loop if there is an empty space
+      if(current == ' '){
+         continue;
+      }
+      //pushes the character as a string to the stack if it's a digit
+      else if(Character.isDigit(current)){
+         push(currently);
+         continue;
+      }
+      //pops the 2 most recent operands, converts them to double, and performs the respective +,-,*,/,^ operation
+      //pushes the result of the operation as a string back onto the stack
+      else{
+         double operandTwo = Double.parseDouble((String)pop());
+         double operandOne = Double.parseDouble((String)pop());
+         switch (current){
+            case '+':
+               result = operandOne + operandTwo;
+               push(set(result));
+               break;
+            case '-':
+               result = operandOne - operandTwo;
+               push(set(result));
+               break;
+            case '*':
+               result = operandOne * operandTwo;
+               push(set(result));
+               break;
+            case '/':
+               result = operandOne / operandTwo;
+               push(set(result));
+               break;
+            case '^':
+               result = (double)Math.pow(operandOne, operandTwo);
+               push(set(result));
+               break;
+         }
+      }
+   }
+   return Double.parseDouble((String)pop());
+}
 //  < Implementations of the private methods go here; checkCapacity and checkIntegrity
 //    are analogous to those in Chapter 2. >
 private void ensureCapacity(){
@@ -85,122 +146,10 @@ private void checkIntegrity()
 	   if (!integrityOK)
 		  throw new SecurityException ("ArrayStack is corrupt.");
 	} // end checkintegrity
-
-/**
- * Evaulates a string postfix expression with variables already substituted
- * @param postfix the postfix string to be solved
- * @return the solution of the postfix expression
- */
- //written by Melody
-public double evaluatePostfix(String postfix){
-   checkIntegrity();
-   //checks if postfix is blank
-   if(postfix.isBlank()){
-      throw new IllegalStateException("Empty string");
-   }
-   //Trim the input for the empty spaces in the beginning and end if there is any
-   postfix = postfix.trim();
-   int result = 0; //holds the total int amount after operations
-   String stringResult = ""; //holds the total amount in a string
-   //begin looping through the sanitized postfix
-   for(int i = 0; i < postfix.length(); i++){
-      char current = postfix.charAt(i);
-      //move forward in the loop if there is an empty space
-      if(current == ' '){
-         continue;
-      }
-      //pushes the character as a string to the stack if it's a digit
-      else if(Character.isDigit(current)){
-         String stringCurrent = String.valueOf(current);
-         push(stringCurrent);
-      }
-      //pops the 2 most recent operands, converts them to double, and performs the respective +,-,*,/,^ operation
-      //pushes the result of the operation as a string back onto the stack
-      else{
-         double operandTwo = Double.parseDouble(valueStack.pop());
-         double operandOne = Double.parseDouble(valueStack.pop());
-         switch (current){
-            case '+':
-               result = operandOne + operandTwo;
-               stringResult = Double.toString(result);
-               push(stringResult);
-               break;
-            case '-':
-               result = operandOne - operandTwo;
-               stringResult = Double.toString(result);
-               push(stringResult);
-               break;
-            case '*':
-               result = operandOne * operandTwo;
-               stringResult = Double.toString(result);
-               push(stringResult);
-               break;
-            case '/':
-               result = operandOne / operandTwo;
-               stringResult = Double.toString(result);
-               push(stringResult);
-               break;
-            case '^':
-               result = (double)Math.pow(operandOne, operandTwo);
-               stringResult = Double.toString(result);
-               push(stringResult);
-               break;
-         }
-      }
-   }
-   return Double.parseDouble(peek());
+public T set(double result){
+   @SuppressWarnings("unchecked")
+   T rslt = (T)Double.toString(result);
+   return rslt;
 }
-
-//version written by Martin
-public double evaluatePostfix1(String postfix) {
-
-   ArrayStack<String> valueStack = new ArrayStack<String>();
-   double result = 0;
-   String stringResult = "";
-
-   for(int i = 0; i < postfix.length(); i++){
-      @SuppressWarnings("unchecked")
-      T nextCharacter = (T)String.valueOf(postfix.charAt(i)); 
-      
-      if(nextCharacter == ' '){
-         continue;
-      }
-
-      double operandTwo = Double.parseDouble(valueStack.pop());
-      double operandOne = Double.parseDouble(valueStack.pop());
-      
-      switch(nextCharacter) {
-         
-         case '+':
-               result = operandOne + operandTwo;
-               stringResult = Double.toString(result);
-               push((T)String.valueOf(result));
-               break;
-            case '-':
-               result = operandOne - operandTwo;
-               stringResult = Double.toString(result);
-               push((T)String.valueOf(result));
-               break;
-            case '*':
-               result = operandOne * operandTwo;
-               stringResult = Double.toString(result);
-               push((T)String.valueOf(result));
-               break;
-            case '/':
-               result = operandOne / operandTwo;
-               stringResult = Double.toString(result);
-               push((T)String.valueOf(result));
-               break;
-            case '^':
-               result = (double)Math.pow(operandOne, operandTwo);
-               stringResult = Double.toString(result);
-               push((T)String.valueOf(result));
-               break;
-         default:
-            push(Double.parseDouble(nextCharacter));
-      }
-   }
-   return Double.parseDouble(peek());
-}
-}
-// end ArrayStack
+//  . . .
+} // end ArrayStack
