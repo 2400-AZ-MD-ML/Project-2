@@ -91,6 +91,7 @@ private void checkIntegrity()
  * @param postfix the postfix string to be solved
  * @return the solution of the postfix expression
  */
+ //written by Melody
 public double evaluatePostfix(String postfix){
    checkIntegrity();
    //checks if postfix is blank
@@ -145,6 +146,58 @@ public double evaluatePostfix(String postfix){
                push(stringResult);
                break;
          }
+      }
+   }
+   return Double.parseDouble(peek());
+}
+
+//version written by Martin
+public double evaluatePostfix1(String postfix) {
+
+   ArrayStack<String> valueStack = new ArrayStack<String>();
+   double result = 0;
+   String stringResult = "";
+
+   for(int i = 0; i < postfix.length(); i++){
+      @SuppressWarnings("unchecked")
+      T nextCharacter = (T)String.valueOf(postfix.charAt(i)); 
+      
+      if(nextCharacter == ' '){
+         continue;
+      }
+
+      double operandTwo = Double.parseDouble(valueStack.pop());
+      double operandOne = Double.parseDouble(valueStack.pop());
+      
+      switch(nextCharacter) {
+         
+         case '+':
+               result = operandOne + operandTwo;
+               stringResult = Double.toString(result);
+               push((T)String.valueOf(result));
+               break;
+            case '-':
+               result = operandOne - operandTwo;
+               stringResult = Double.toString(result);
+               push((T)String.valueOf(result));
+               break;
+            case '*':
+               result = operandOne * operandTwo;
+               stringResult = Double.toString(result);
+               push((T)String.valueOf(result));
+               break;
+            case '/':
+               result = operandOne / operandTwo;
+               stringResult = Double.toString(result);
+               push((T)String.valueOf(result));
+               break;
+            case '^':
+               result = (double)Math.pow(operandOne, operandTwo);
+               stringResult = Double.toString(result);
+               push((T)String.valueOf(result));
+               break;
+         default:
+            push(Double.parseDouble(nextCharacter));
       }
    }
    return Double.parseDouble(peek());
