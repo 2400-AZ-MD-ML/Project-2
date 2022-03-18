@@ -9,7 +9,7 @@ import java.lang.Math;
     @author Frank M. Carrano and Timothy M. Henry
     @version 5.0
 */
-public final class ArrayStack<T> implements StackInterface<T>
+public final class ResizeableArrayStack<T> implements StackInterface<T>
 {
 	private T[] stack;    // Array of stack entries
 	private int topIndex; // Index of top entry
@@ -17,12 +17,12 @@ public final class ArrayStack<T> implements StackInterface<T>
 	private static final int DEFAULT_CAPACITY = 50;
 	private static final int MAX_CAPACITY = 10000;
   
-   public ArrayStack()
+   public ResizeableArrayStack()
    {
       this(DEFAULT_CAPACITY);
    } // end default constructor
   
-   public ArrayStack(int initialCapacity)
+   public ResizeableArrayStack(int initialCapacity)
    {
       checkCapacity(initialCapacity);
       
@@ -72,7 +72,7 @@ while(topIndex>-1){
  * @return the solution of the postfix expression
  */
  public double evaluatePostfix(String postfix){
-    ArrayStack<Double> operandStack = new ArrayStack<Double>();
+    ResizeableArrayStack<Double> operandStack = new ResizeableArrayStack<Double>();
    checkIntegrity();
    //checks if postfix is blank
    if(postfix.isBlank()){

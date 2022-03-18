@@ -6,17 +6,17 @@ import org.junit.jupiter.api.Assertions;
 public class CalculatorTest {
     @Test
     public void evaluatePostfixTest1(){
-        ArrayStack<String> test = new ArrayStack<String>();
+        ResizeableArrayStack<String> test = new ResizeableArrayStack<String>();
         assertEquals(-10.0, test.evaluatePostfix("234-/5*"), Math.abs(-10.0-test.evaluatePostfix("234-/5*")));
     }
     @Test
     public void evaluatePostfixTest2(){
-        ArrayStack<String> test = new ArrayStack<String>();
+        ResizeableArrayStack<String> test = new ResizeableArrayStack<String>();
         assertEquals(19.0, test.evaluatePostfix("4 52* +5 +"),Math.abs(19.0-test.evaluatePostfix("4 52* +5 +")));
     }
     @Test
     public void evaluatePostfixTestError(){
-        ArrayStack<String> test = new ArrayStack<String>();
+        ResizeableArrayStack<String> test = new ResizeableArrayStack<String>();
         Assertions.assertThrows(IllegalStateException.class, ()-> {test.evaluatePostfix(" ");}, "Empty String");
     }
     @Test
