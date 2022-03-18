@@ -71,8 +71,8 @@ while(topIndex>-1){
  * @param postfix the postfix string to be solved
  * @return the solution of the postfix expression
  */
- //written by Melody
  public double evaluatePostfix(String postfix){
+    ArrayStack<Double> operandStack = new ArrayStack<Double>();
    checkIntegrity();
    //checks if postfix is blank
    if(postfix.isBlank()){
@@ -84,8 +84,6 @@ while(topIndex>-1){
    //begin looping through the sanitized postfix
    for(int i = 0; i < postfix.length(); i++){
       //Make the current character a T type, so that we can push it onto the stack if it's a operator
-      @SuppressWarnings("unchecked")
-      T currently = (T)String.valueOf(postfix.charAt(i));
       char current = postfix.charAt(i);
       //move forward in the loop if there is an empty space
       if(current == ' '){
@@ -93,39 +91,39 @@ while(topIndex>-1){
       }
       //pushes the character as a string to the stack if it's a digit
       else if(Character.isDigit(current)){
-         push(currently);
+         operandStack.push(Double.parseDouble(String.valueOf(postfix.charAt(i))));
          continue;
       }
       //pops the 2 most recent operands, converts them to double, and performs the respective +,-,*,/,^ operation
       //pushes the result of the operation as a string back onto the stack
       else{
-         double operandTwo = Double.parseDouble((String)pop());
-         double operandOne = Double.parseDouble((String)pop());
+         double operandTwo = operandStack.pop();
+         double operandOne = operandStack.pop();
          switch (current){
             case '+':
                result = operandOne + operandTwo;
-               push(set(result));
+               operandStack.push(result);
                break;
             case '-':
                result = operandOne - operandTwo;
-               push(set(result));
+               operandStack.push(result);
                break;
             case '*':
                result = operandOne * operandTwo;
-               push(set(result));
+               operandStack.push(result);
                break;
             case '/':
                result = operandOne / operandTwo;
-               push(set(result));
+               operandStack.push(result);
                break;
             case '^':
                result = (double)Math.pow(operandOne, operandTwo);
-               push(set(result));
+               operandStack.push(result);
                break;
          }
       }
    }
-   return Double.parseDouble((String)pop());
+   return operandStack.pop();
 }
 //  < Implementations of the private methods go here; checkCapacity and checkIntegrity
 //    are analogous to those in Chapter 2. >
@@ -146,10 +144,5 @@ private void checkIntegrity()
 	   if (!integrityOK)
 		  throw new SecurityException ("ArrayStack is corrupt.");
 	} // end checkintegrity
-public T set(double result){
-   @SuppressWarnings("unchecked")
-   T rslt = (T)Double.toString(result);
-   return rslt;
-}
 //  . . .
 } // end ArrayStack

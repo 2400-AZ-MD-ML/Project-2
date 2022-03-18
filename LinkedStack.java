@@ -53,6 +53,7 @@ private void checkIntegrity(){
  * @return the postFix version of the infix string
 */
 public String converttoPostFix(String postFix){
+   LinkedStack<Character> operatorStack = new LinkedStack<Character>();
    checkIntegrity();
    if(postFix.isBlank()){
       throw new IllegalStateException("Empty string");
@@ -60,17 +61,11 @@ public String converttoPostFix(String postFix){
    //Trim the input for the empty spaces in the beginning and end if there is any
    postFix = postFix.trim();
    String result = "";  
-  //Have the open parenthesis be an T item because we need to check it later
-   @SuppressWarnings("unchecked")
-   T open = (T)String.valueOf('(');
    for(int i =0; i<postFix.length(); i++){
       //move forward in the loop if there is an empty space
       if(postFix.charAt(i)== ' '){
          continue;
       }
-      //Make the current character a T type, so that we can push it onto the stack if it's a operator
-      @SuppressWarnings("unchecked")
-      T current = (T)String.valueOf(postFix.charAt(i));
    //If it's a character just add it to result
    if(Character.isLetter(postFix.charAt(i))){
    
@@ -79,7 +74,7 @@ public String converttoPostFix(String postFix){
       }
       //If it's the highest precedence oprerator of ^ then we just push it onto the stack
       else if(postFix.charAt(i)== '^'){
-         push(current);
+        operatorStack.push(postFix.charAt(i));
          continue;
       }
     // If it's a normal operator of +,-,/, or * then we need to check if the stack has elements and if the current operator is less than or equal 
@@ -87,31 +82,30 @@ public String converttoPostFix(String postFix){
     //then add it to the result then we push the current operator to the stack
       else if(postFix.charAt(i)== '*' || postFix.charAt(i)== '+' || postFix.charAt(i) == '-' || postFix.charAt(i) == '/'  ){
       
-         while((!isEmpty()) && precedence(current)<= precedence(peek()) ){
-             result += pop();
+         while((!operatorStack.isEmpty()) && precedence(postFix.charAt(i))<= precedence(operatorStack.peek()) ){
+             result += operatorStack.pop();
          }
-         push(current);
+         operatorStack.push(postFix.charAt(i));
 
          continue;
       }
       //Add the operator ( to the stack
    else if(postFix.charAt(i) =='('){
-      push(current);
+      operatorStack.push(postFix.charAt(i));
       continue;
    }
    // Then pop all the operators and add them to the result when the ) comes, until the open operator
   else if(postFix.charAt(i)==')'){
-     T topOperator = pop();
-     while(!topOperator.equals(open)){
-        result += topOperator;
-        topOperator = pop();
+     char top = operatorStack.pop();
+     while(top != '('){
+        result += top;
+        top = operatorStack.pop();
      }
    }
   }
   // Add any remaining operators onto result after the loop has traversed through the string.
-while(!isEmpty()){
-  T top = pop();
-   result += top;
+while(!operatorStack.isEmpty()){
+   result += operatorStack.pop();
 }
 return result;
 }
@@ -120,14 +114,14 @@ return result;
  * @param operator is the operator that will be checked ofr the precedence
  * @return a integer number that is based off the operator given
 */
-public int precedence(T operator){
-  if(operator.equals("+") || operator.equals("-")){
+public int precedence(char operator){
+  if(operator== '+' || operator== '-'){
      return 1;
   }
-  else if(operator.equals("/")|| operator.equals("*")){
+  else if(operator== '/'|| operator== '*'){
      return 2;
   }
-  else if(operator.equals("^")){
+  else if(operator== '^'){
      return 3;
   }
   return -1;
